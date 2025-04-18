@@ -1,5 +1,6 @@
 package se.yrgo.services.customers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,51 +20,51 @@ public class CustomerManagementMockImpl implements CustomerManagementService {
 
 	@Override
 	public void newCustomer(Customer newCustomer) {
-		
+		customerMap.put(newCustomer.getCustomerId(), newCustomer);
 	}
 
 	@Override
 	public void updateCustomer(Customer changedCustomer) {
-
-
+		Customer oldCustomer = customerMap.get(changedCustomer.getCustomerId());
+		customerMap.replace(oldCustomer.getCustomerId(), oldCustomer, changedCustomer);
 	}
 
 	@Override
 	public void deleteCustomer(Customer oldCustomer) {
-		// TODO Auto-generated method stub
-
+		customerMap.remove(oldCustomer.getCustomerId());
 	}
 
 	@Override
 	public Customer findCustomerById(String customerId) throws CustomerNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		return customerMap.get(customerId);
 	}
 
 	@Override
 	public List<Customer> findCustomersByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Customer> result = new ArrayList<>();
+		for (Customer c : customerMap.values()){
+			if (c.getCompanyName().equals(name)){
+				result.add(c);
+			}
+		}
+		return result;
 	}
 
 	@Override
 	public List<Customer> getAllCustomers() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<Customer>(customerMap.values());
 	}
 
 	@Override
 	public Customer getFullCustomerDetail(String customerId) throws CustomerNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		Customer customer = customerMap.get(customerId);
+		return customer;
 	}
 
 	@Override
 	public void recordCall(String customerId, Call callDetails) throws CustomerNotFoundException {
-		//First find the customer
-
-		//Call the addCall on the customer
-
+		Customer customer = customerMap.get(customerId);
+		customer.addCall(callDetails);
 	}
 
 }
